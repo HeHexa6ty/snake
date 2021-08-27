@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <link rel='stylesheet' type='text/css' href='style.css'>
+    </head>
+    <body>
+        <aside>
+            <input type='button' id='settings' value="o" onclick="show_options()">
+        </aside>
+        <section id='menu-bar'>
+            <span>Skins</span>
+            <br>
+            <label for='snake-skin' id='snake'>Snake</label>
+            <input type='text' id='snake-skin' value="">
+            <br>
+            <label for='head-skin'  id='head' >Head</label>
+            <input type='text' id='head-skin' value="">
+            <br>
+            <label for='apple-skin' id='apple'>Apple</label>
+            <input type='text' id='apple-skin' value="">
+            <br>
+            <label for='board-skin'  id='board' >Board</label>
+            <input type='text' id='board-skin' value="">
+            <br>
+            <label for='score-skin'  id='score' >Score</label>
+            <input type='text' id='score-skin' value="">
+            <hr style="margin: 5% 0 5% 0; width:85%;">
+            <span>Gameplay</span>
+            <br>
+            <input type='checkbox' id='border'>
+            <label for='border'    id='border-label'>Border</label>
+            <br>
+            <input type='checkbox' id='masochist'>
+            <label for='masochist' id='masochist-label' >Self Eater</label>
+            <br>
+            <input type='checkbox' id='fastest'>
+            <label for='fastest' id='fastest-label' >The fastest snake in the west</label>
+            <br>
+            <input type='checkbox' id='infinite'>
+            <label for='infinite' id='infinite-label' >Infinite ?</label>
+            <br>
+            <input type='button' id='save' value='save' onclick='save_and_go()'>
+            <input type='button' id='default' value='default' onclick='reset_values()'>
+
+        </section>
+        <main>
+            <canvas id='eden'>Canvas not supported</canvas>
+            <canvas id='score-bar'>Canvas not supported</canvas>
+        </main>
+        <script type='text/javascript' src='script.js'></script>
+    </body>
+</html>

@@ -1,0 +1,74 @@
+*{
+    margin:0;
+    padding:0;
+}
+body{
+    /* background-color: black; */
+    overflow: hidden;
+}
+#eden{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+#score-bar{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+}
+#menu-bar{
+    position:absolute;
+    left:-24%;
+    top:0;
+    width:20vw;
+    height:100%;
+    background-color: rgba(165, 165, 165, .5);
+    z-index: 1;
+    padding:1%;
+    font-size: 1vw;
+    overflow:scroll;
+}
+#snake{
+    color:#54AA23;
+}
+#head{
+    color:#00FF00;
+}
+#apple{
+    color:#FF0000;
+}
+#board{
+    color:#0F0000;
+}
+#score{
+    color:#FFFFFF;
+}
+#menu-bar > input {
+    font-size: 1.5vw;
+    width:100%;
+}
+#menu-bar > span{
+    font-size: 1.8vw;
+    width:100%;
+    color:white;
+}
+input[type = 'checkbox']{
+    width:3vw;
+    height:3vh;
+}
+#border-label, #masochist-label, #fastest-label, #infinite-label{
+    color:ivory;
+    font-size:1.5vw;
+    padding:0 0 0 5%;
+}
+#save, #default{
+    width:85%;
+    height:5%;
+    margin:5% 0 0 0;
+}
+#settings{
+    position: absolute;
+    z-index: 2;
+}
