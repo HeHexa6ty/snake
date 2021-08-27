@@ -1,2 +1,2 @@
-# snake
-Snake-canvas
+# Snake
+Snake made with html tag <canvas>
