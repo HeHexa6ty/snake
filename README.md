@@ -1,3 +1,3 @@
 # Snake
 ## Snake made with html tag 'canvas'
-### A lot of js and love
+### A lot of js 
