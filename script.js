@@ -103,11 +103,11 @@ let body = [];
                 sizeOfBox
             );
             if(i == 0){
-                ctx.fillStyle = head_skin;    
+                ctx.strokeStyle = head_skin;    
             }else{
-                ctx.fillStyle = body_skin;
+                ctx.strokeStyle = body_skin;
             }
-            ctx.fill();
+            ctx.stroke();
         }
     };
 // HEAD INIT
@@ -348,9 +348,9 @@ let save_and_go = () => {
     font_color = document.getElementById('score-skin').value;
     border = document.getElementById('border').checked;
     if(border){
-        c.style.margin = "10px 120px 120px 10px";
-        c.style.boxSizing = "border-box";
-        c.style.border = "1px solid white";
+        document.getElementById('body-border').style.visibility = 'visible';
+    }else{
+        document.getElementById('body-border').style.visibility = 'hidden';
     }
     masochist = document.getElementById('masochist').checked;
     speedy = document.getElementById('fastest').checked;
