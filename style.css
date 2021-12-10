@@ -64,8 +64,8 @@ input[type = 'checkbox']{
     padding:0 0 0 5%;
 }
 #save, #default{
-    width:85%;
-    height:5%;
+    width:85vw;
+    height:5vw;
     margin:5% 0 0 0;
 }
 #settings{
@@ -82,4 +82,10 @@ input[type = 'checkbox']{
     box-sizing: border-box;
     border:1px solid red;
     visibility: hidden;
+}
+#border{
+    flex-flow: row;
+}
+#border-label{
+    flex-flow: row;
 }

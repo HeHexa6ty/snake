@@ -1,26 +1,32 @@
 // -------------------------------------- CANVAS ---------------------------------------------
 console.log("Adam, Eve and ...");
+// This canvas is responsible for the game
 let c = document.getElementById('eden');
 let ctx = c.getContext('2d');
-
+// This canvas is responsible for the score
 let s = document.getElementById('score-bar');
 let stx = s.getContext('2d');
-
-let max_width = Math.floor(window.innerWidth);
-let max_height = Math.floor(window.innerHeight);
+// Usefull resolution variables
+let max_width = Math.floor(window.innerWidth) - 1;
+let max_height = Math.floor(window.innerHeight) - 1;
 // -------------------------------------- SETTINGS ---------------------------------------------
-// DEFAULT SETTINGS
+// DEFAULT SETTINGS - Vanilla
 const default_head_skin = "#00FF00";
 const default_body_skin = "#54AA23";
 const default_board_skin = "#000";
 const default_apple_skin = "#FF0000";
 const default_font_color = "#FFFFFF";
+const default_fill_snake = false;
+// Tick rate is used to control the speed of the game
+// Lower ==> faster         ;      Higher ==> slower
 const default_tick_rate = 4;
+// snake is grid based game. Here is declared scale of grid
 const default_scaleOfBox = max_width / 30;
 let font_size = 30;
 let gameStarted = false;
 let gamePaused = false;
 let scaleOfBox = default_scaleOfBox;
+// Game modes
 let border = false;
 let masochist = false;
 let speedy = false;
@@ -30,13 +36,14 @@ let speed_stamp = 100;
 // USER SETTINGS
 let head_skin = "#00FF00";
 let body_skin = "#54AA23";
-let board_skin = "#000";
+let board_skin = "#000000";
 let apple_skin = "#FF0000";
 let font_color = "#FFFFFF";
+let fill_snake = false;
 let tick_rate = 4;
 document.querySelector('body').style.backgroundColor = board_skin;
 // RESOLUTION DISPLAY
-console.log(`${max_width} \n ${max_height} \n ${c.width} \n ${c.height}`);
+// console.log(`${max_width} \n ${max_height} \n ${c.width} \n ${c.height}`);
 c.width = max_width;
 c.height = max_height;
 
@@ -44,7 +51,7 @@ s.width = max_width;
 s.height = font_size * 2;
 
 // -------------------------------------- PLAYBOARD ---------------------------------------------
-let drawGrid = () => {
+let drawGrid = () => { // function suppoused to help a programmer
     for(let i = 1; i <= indicator; i++){
         ctx.moveTo(sizeOfBox * i, 0);
         ctx.lineTo(sizeOfBox * i, max_height);
@@ -57,17 +64,15 @@ let drawGrid = () => {
 // PLAYBOARD SETTINGS
 let sizeOfBox = Math.floor(max_width / scaleOfBox);
 let indicator = max_width / sizeOfBox ;
-console.log(`sizeOfBox: ${sizeOfBox}`);
-
+// Color board to 'xxxxx' color
 ctx.strokeStyle = board_skin;
-drawGrid();
 // -------------------------------------- APPLE ---------------------------------------------
 let apple = {
     x : 0,
     y : 0,
     score : 0
 };
-// APPLE DRAW
+// Used to draw apple at the beggining and when apple has been eaten
 let drawApple = () => {
     ctx.beginPath();
     ctx.rect(
@@ -79,7 +84,7 @@ let drawApple = () => {
     ctx.fillStyle = apple_skin;
     ctx.fill();
 };
-// APPLE INIT
+// initialize apple cords used after being eaten or game just started
 let init_apple = () => {
     apple.x = sizeOfBox * Math.floor(Math.random(0, scaleOfBox) * scaleOfBox);
     apple.y = sizeOfBox * Math.floor(Math.random(0, scaleOfBox) * ( (max_height / sizeOfBox) - 2) );
@@ -90,8 +95,9 @@ let head = {
     x : 0,
     y : 0,
 };
+// Snake is build with queue and that's how we are going to interpret that array 
 let body = [];
-// BODY DRAW
+// Draws every segment of snake's body + head
     let drawBody = () => {
         let i = 0;
         for(i; i < apple.score + 3; i++){
@@ -102,21 +108,44 @@ let body = [];
                 sizeOfBox,
                 sizeOfBox
             );
-            if(i == 0){
-                ctx.strokeStyle = head_skin;    
+            if(fill_snake){
+                if(i == 0){
+                    ctx.fillStyle = head_skin;    
+                }else{
+                    ctx.fillStyle = body_skin;
+                }
+                ctx.fill();
             }else{
-                ctx.strokeStyle = body_skin;
+                if(i == 0){
+                    ctx.strokeStyle = head_skin;    
+                }else{
+                    ctx.strokeStyle = body_skin;
+                }
+                ctx.stroke();
             }
+        }
+        ctx.beginPath();
+        ctx.rect(
+            body[0].x, 
+            body[0].y,
+            sizeOfBox,
+            sizeOfBox
+        );
+        if(fill_snake){
+            ctx.fillStyle = head_skin;    
+            ctx.fill();
+        }else{
+            ctx.strokeStyle = head_skin;    
             ctx.stroke();
         }
     };
-// HEAD INIT
+// Takes random cords to spawn snake at them
 let headDirection = 0;
     let init_head = () => {
         headDirection = 0;
         head.x = sizeOfBox * Math.floor(Math.random(0, scaleOfBox) * scaleOfBox);
         head.y = sizeOfBox * Math.floor(Math.random(0, scaleOfBox) * ( (max_height / sizeOfBox) - 2) );
-        console.log(head.y);
+        // console.log(head.y);
         body = [
             {x:head.x, y:head.y},
             {x:head.x - sizeOfBox, y:head.y},
@@ -125,7 +154,7 @@ let headDirection = 0;
         // drawBody();
     };
 // HEAD MOVEMOENT
-    // FIRST MOVE (LEFT, UP, RIGHT, BOTTOM) == GAME START
+    // After using those keys/buttons [LEFT, UP, RIGHT, BOTTOM](keycode order) game will start
     window.addEventListener('keydown', function(e){
         if( gameStarted == false && settingsButton.style.visibility != 'hidden' && gamePaused == false){
             animate();
@@ -143,14 +172,17 @@ let headDirection = 0;
         }
     });
 
-// MOVEMENT IN GAME == head MOVES
+// Player is going to control only head
+// Rest of the body just follows the head
 let ticks = 0;
 let refresh = [];
     let headMove = () => {
+        // movement is done when fraps allow it
+        // and when game isn't paused
         if(ticks % tick_rate == 0 && gamePaused != true){
             ctx.clearRect(0, 0, max_width, max_height);
             switch(headDirection){
-                case 1:
+                case 1:// move to the left
                     refresh = [];
                     for(let i = 0; i < apple.score + 2; i++){
                         refresh.push({x:body[i].x, y:body[i].y});
@@ -161,7 +193,7 @@ let refresh = [];
                     }
                     drawBody();
                     break;
-                case 2:
+                case 2:// move to the up
                     refresh = [];
                     for(let i = 0; i < apple.score + 2; i++){
                         refresh.push({x:body[i].x, y:body[i].y});
@@ -172,7 +204,7 @@ let refresh = [];
                     }
                     drawBody();
                     break;
-                case 3:
+                case 3:// move to the right
                     refresh = [];
                     for(let i = 0; i < apple.score + 2; i++){
                         refresh.push({x:body[i].x, y:body[i].y});
@@ -183,7 +215,7 @@ let refresh = [];
                     }
                     drawBody();
                     break;
-                case 4:
+                case 4:// move to the down
                     refresh = [];
                     for(let i = 0; i < apple.score + 2; i++){
                         refresh.push({x:body[i].x, y:body[i].y});
@@ -201,6 +233,7 @@ let refresh = [];
         
     }
 // -------------------------------------- SYSTEM ---------------------------------------------
+    // if snake cords match apple cords then we initialize apple again.
     let eat = () => {
         if( body[0].x == apple.x && body[0].y == apple.y){
             apple.score++;
@@ -213,25 +246,29 @@ let refresh = [];
             }
         }
     };
+    // snake can move through walls
     let borderlessMode = () => {
-        if(body[0].x > max_width){
-            body[0].x = -sizeOfBox;
+        if(body[0].x > max_width ) {
+            body[0].x = 0;
         }
-        if(body[0].x < -sizeOfBox){
+        if(body[0].x < 0){
             body[0].x = max_width;
         }
         if(body[0].y > max_height){
-            body[0].y = -sizeOfBox;
+            body[0].y = 0;
         }
-        if(body[0].y < -sizeOfBox){
+        if(body[0].y < 0){
             body[0].y = max_height;
         }
     };
+    // snake can't move through wall
+    // It's killing him
     let borderMode = () => {
         if(body[0].x < 0 || body[0].x > max_width || body[0].y < 0 || body[0].y > max_height){
             reset();
         }
     };
+    // snake can eat himself
     let suicideMode = () => {
         let x = body[0].x;
         let y = body[0].y;
@@ -241,12 +278,16 @@ let refresh = [];
             }
         }
     }
+    // oh no you died
+    // start again
     let reset = () => {
         init_head();
         init_apple();
         headDirection = 0;
         apple.score = 0;
     }
+    // apple eaten
+    // score is given
     let score = () => {
         stx.clearRect(0, 0, max_width, font_size * 2);
         stx.font = `${font_size}px Arial`;
@@ -256,6 +297,9 @@ let refresh = [];
         stx.fillText(`X : ${apple.x}`, 2*font_size , font_size);
         stx.fillText(`Y : ${apple.y}`, max_width - font_size * 2 , font_size);
     };
+    // if something won't go right with responsivnes
+    // just corect the position of snake
+    // push it to the left or right or wherever to the playboard
     let position_control = () => {
         while(body[0].x % sizeOfBox != 0){
             body[0].x--;
@@ -278,11 +322,13 @@ let refresh = [];
             console.log(`X:${body[0].x} Y:${body[0].y} `);
         }
     }
+    // GAME MODE: after reaching some points increase the speed of the snake
     let fastest_in_the_west = () => {
         if( apple.score % speed_stamp == 0 && apple.score != 0 && tick_rate > 1){
             tick_rate -= 1;
         }
     }
+    // GAME MODE: after reaching some points decrease snake and playboard
     let never_ending_journey = () => {
         if( apple.score % journey_stamp == 0){
             scaleOfBox += 32;
@@ -298,6 +344,7 @@ init_head();
 drawBody();
 init_apple();
 drawApple();
+// Main function used to make animation/gameplay
 let animate = () => {
     requestAnimationFrame(animate);
     // GAMEPLAY
@@ -309,6 +356,7 @@ let animate = () => {
     ticks++;
     if( ticks > tick_rate ){
         ticks = 1;
+        console.log(`Snake ${body[0].x} ${body[0].y}`);
     }
     // BORDER
     if( border == true ){
@@ -323,6 +371,7 @@ let animate = () => {
     // IF X and Y Dont match playboard correct them
     position_control(); 
 }
+// Option bar at the top-left
 let settingsButton = document.getElementById('settings');
 let menuBar = document.getElementById('menu-bar');
 let show_options = () => {
@@ -334,6 +383,7 @@ let show_options = () => {
     document.getElementById('apple-skin').value = apple_skin;
     document.getElementById('board-skin').value = board_skin;
     document.getElementById('score-skin').value = font_color;
+    document.getElementById('fill').value = fill_snake;
     document.getElementById('border').checked = border;
     document.getElementById('masochist').checked = masochist;
     document.getElementById('fastest').checked = speedy;
@@ -352,6 +402,7 @@ let save_and_go = () => {
     }else{
         document.getElementById('body-border').style.visibility = 'hidden';
     }
+    fill_snake = document.getElementById('fill').checked; 
     masochist = document.getElementById('masochist').checked;
     speedy = document.getElementById('fastest').checked;
     infinite = document.getElementById('infinite').checked;
@@ -365,6 +416,7 @@ let reset_values = () => {
     document.getElementById('apple-skin').value = default_apple_skin;
     document.getElementById('board-skin').value = default_board_skin;
     document.getElementById('score-skin').value = default_font_color;
+    document.getElementById('fill').checked = default_fill_snake;
     document.getElementById('border').checked = false;
     document.getElementById('masochist').checked = false;
     document.getElementById('fastest').checked = false;
