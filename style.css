@@ -80,12 +80,15 @@ input[type = 'checkbox']{
     width:100%;
     height:100%;
     box-sizing: border-box;
-    border:1px solid red;
-    visibility: hidden;
+    border:1px solid #555;
+    visibility: visible;
 }
 #border{
     flex-flow: row;
 }
 #border-label{
     flex-flow: row;
+}
+#eater, #speed, #inf{
+    visibility: hidden;
 }

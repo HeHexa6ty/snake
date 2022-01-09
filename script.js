@@ -171,7 +171,20 @@ let headDirection = 0;
                 break;
         }
     });
-
+// resize
+window.addEventListener('resize', function(){
+    max_width = Math.floor(window.innerWidth) - 1;
+    max_height = Math.floor(window.innerHeight) - 1;
+    c.width = max_width;
+    c.height = max_height;
+    // sizeOfBox = Math.floor(max_width / scaleOfBox);
+    indicator = max_width / sizeOfBox ;
+    s.width = max_width;
+    s.height = font_size * 2;
+    init_apple();
+    drawBody();
+    drawApple();
+})
 // Player is going to control only head
 // Rest of the body just follows the head
 let ticks = 0;
@@ -294,8 +307,6 @@ let refresh = [];
         stx.fillStyle = font_color;
         stx.textAlign = "center";
         stx.fillText(`Score : ${apple.score}`, max_width/2, font_size);
-        stx.fillText(`X : ${apple.x}`, 2*font_size , font_size);
-        stx.fillText(`Y : ${apple.y}`, max_width - font_size * 2 , font_size);
     };
     // if something won't go right with responsivnes
     // just corect the position of snake
@@ -399,8 +410,10 @@ let save_and_go = () => {
     border = document.getElementById('border').checked;
     if(border){
         document.getElementById('body-border').style.visibility = 'visible';
+        document.getElementById('body-border').style.border = '1px solid red';
     }else{
-        document.getElementById('body-border').style.visibility = 'hidden';
+        document.getElementById('body-border').style.visibility = 'visible';
+        document.getElementById('body-border').style.border = '1px solid #555';
     }
     fill_snake = document.getElementById('fill').checked; 
     masochist = document.getElementById('masochist').checked;
@@ -409,6 +422,21 @@ let save_and_go = () => {
     gamePaused = false;
     menuBar.style.left = '-24%';
     settingsButton.style.visibility = 'visible';
+    if(masochist){
+        document.getElementById('eater').style.visibility = 'visible';
+    }else{
+        document.getElementById('eater').style.visibility = 'hidden';
+    }
+    if(speedy){
+        document.getElementById('speed').style.visibility = 'visible';
+    }else{
+        document.getElementById('speed').style.visibility = 'hidden';
+    }
+    if(infinite){
+        document.getElementById('inf').style.visibility = 'visible';
+    }else{
+        document.getElementById('inf').style.visibility = 'hidden';
+    }
 }
 let reset_values = () => {
     document.getElementById('snake-skin').value = default_body_skin;
