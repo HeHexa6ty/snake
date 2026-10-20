@@ -1,3 +1,3 @@
 # Snake
-## Snake made with html tag 'canvas'
+## Snake made with html markup 'canvas'
 ### A lot of js 
